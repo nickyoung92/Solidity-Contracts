@@ -4,17 +4,14 @@ pragma solidity ^0.8.13;
 /**
 
 Multi Tier Random Mint Pass. 
-This contract was created to allow for a randomized and weighted ERC1155 mint with 4 separate token IDs. 
-Not final do not use.
-
-@nyoungdumb
 
 **/
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
+import "https://github.com/nickyoung92/Solidity-Contracts/blob/main/Shareholders.sol";
 
-contract MintPass is ERC1155, Ownable {
+contract MintPass is ERC1155, Shareholders {
     using Strings for uint256;
     uint256 nonce;
 
@@ -34,13 +31,13 @@ contract MintPass is ERC1155, Ownable {
     
     event SetBaseURI(string indexed _baseURI);
 
-    constructor(string memory _baseURI) ERC1155(_baseURI) {
+    constructor(string memory _baseURI, uint[] memory _tokenIDs, uint[] memory _tokenSupply) ERC1155(_baseURI) {
         baseURI = _baseURI;
         emit SetBaseURI(baseURI);
-        maxSupply[1] = 250;
-        maxSupply[2] = 150;
-        maxSupply[3] = 99;
-        maxSupply[4] = 1;
+        for (uint i = 0; i<_tokenIDs.length; i++) {
+            maxSupply[_tokenIDs[i]] = _tokenSupply[i];
+        }
+        
     }
 
     function mintOne()
