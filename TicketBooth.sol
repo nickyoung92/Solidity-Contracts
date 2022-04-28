@@ -11,8 +11,8 @@ Tickets can not be sold or transferred and are non refundable.
 */
 
 contract TicketBooth {
-    address public feeReceiver = 0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2;
-    uint public createEventFee = 0 ether;
+    address public feeReceiver = 0xfD74E361244a2E4eb807583969943EEc01b60FFC;
+    uint public createEventFee = 0.05 ether;
     mapping(address => uint) public eventNumberOfHost;
     mapping(uint => mapping(address => uint)) public ticketPriceOfEvent;
     mapping(uint => mapping(address => uint)) public totalTicketsOfEvent;
