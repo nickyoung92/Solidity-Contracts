@@ -10,8 +10,8 @@ Shareholders can be changed via changeShareholders function. Only contract owner
 Changing shareholders will override previous shareholders.
 All shareholder addresses must be able to receive ETH, otherwise it will revert for everyone. 
 Anyone can call withdraw function. Withdraw function will withdraw entire contract balance and split according to shares/totalshares.
-
 */
+
 contract Shareholders is Ownable {
     address payable[] public shareholders;
     uint256[] public shares;
@@ -19,6 +19,11 @@ contract Shareholders is Ownable {
     event Received(address, uint);
     receive() external payable {
         emit Received(msg.sender, msg.value);
+    }
+
+    constructor() {
+        shareholders.push(payable(tx.origin));
+        shares.push(100);
     }
 
     function changeShareholders(address payable[] memory newShareholders, uint256[] memory newShares) public onlyOwner {
@@ -41,7 +46,7 @@ contract Shareholders is Ownable {
       return totalShares;
   }
 
-    function withdraw() public payable {
+    function withdraw() public {
         address partner;
         uint256 share;
         uint256 totalShares = getTotalShares();
