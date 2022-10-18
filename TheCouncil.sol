@@ -36,6 +36,7 @@ contract Council {
     mapping(address => mapping(uint256 => uint256)) internal votesCastCouncil;
     mapping(address => mapping(uint256 => uint256)) internal votesCastMultipleChoice;
     mapping(address => uint256) public lastProposal;
+    mapping(address => uint256) public lastProposalOfContract;
 
     constructor() {
         Admin = msg.sender;
@@ -150,12 +151,14 @@ contract Council {
     //function to propose a new collection to the Council. Can only be proposed by a current council member holder.
     function proposeNewCouncilMember(address _contract) external isCouncilHolder {
         require(block.timestamp > lastProposal[msg.sender]+proposalCooldown, "You must wait before submitting another proposal.");
+        require(block.timestamp > lastProposalOfContract[_contract]+votingPeriod, "This contract has already been proposed. Please vote or wait until the voting period is over to propose again.");
         require(isCouncilMember(_contract) == false, "This contract is already on the council.");
         require(isValid(_contract) == true, "This contract is not compatible.");
         uint256 votesRequired = getVotesRequired();
         NewCouncilMemberProposals memory new_proposal = NewCouncilMemberProposals(_contract, false, false, block.timestamp, (block.timestamp + votingPeriod), 0, votesRequired);
         councilProposals.push(new_proposal);
         lastProposal[msg.sender] = block.timestamp;
+        lastProposalOfContract[_contract] = block.timestamp;
     }
 
     //create multiple choice proposal
