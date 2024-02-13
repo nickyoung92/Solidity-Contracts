@@ -12,7 +12,7 @@ All payee addresses must be able to receive ETH, otherwise it will revert for ev
 Anyone can call withdraw function. Withdraw function will withdraw entire contract balance and split according to shares/totalshares.
 
 */
-abstract contract PaymentSplitter is Ownable {
+abstract contract PaymentSplitter is Ownable(msg.sender) {
     IERC20 internal tokenContract;
     address payable[] public payees;
     uint256[] public shares;
